@@ -4,76 +4,24 @@
   
   
   <entry>
+    <title>SpringBootApplication</title>
+    <link href="/2023/10/16/SpringBootApplication/"/>
+    <url>/2023/10/16/SpringBootApplication/</url>
+    
+    <content type="html"><![CDATA[<p><strong>@SpringBootApplication包含的三个注解及其含义</strong></p><p><strong>第一个：@SpringBootConfiguration（在这个类的源码中又有一个Configuration的注解）</strong></p><p>@Configuration这个注解的作用就是声明当前类是一个配置类，然后Spring会自动扫描到添加了@Configuration的类，读取其中的配置信息，而@SpringBootConfiguration是来声明当前类是SpringBoot应用的配置类，项目中只能有一个。所以一般我们无需自己添加。</p><p><strong>第二个：@EnableAutoConfiguration</strong></p><p>开启自动配置，告诉SpringBoot基于所添加的依赖，去“猜测”你想要如何配置Spring。比如我们引入了spring-boot-starter-web，而这个启动器中帮我们添加了tomcat、SpringMVC的依赖，此时自动配置就知道你是要开发一个web应用，所以就帮你完成了web及SpringMVC的默认配置了！我们使用SpringBoot构建一个项目，只需要引入所需框架的依赖，配置就可以交给SpringBoot处理了。</p><p><strong>第三个：@ComponentScan</strong></p><p>配置组件扫描的指令</p><p>提供了类似与<a href="context:component-scan">context:component-scan</a>标签的作用</p><p>通过basePackageClasses或者basePackages属性来指定要扫描的包。</p><p>如果没有指定这些属性，那么将从声明这个注解的类所在的包开始，扫描包及子包</p><p>而我们的@SpringBootApplication注解声明的类就是main函数所在的启动类，</p><p>因此扫描的包是该类所在包及其子包。因此，一般启动类会放在一个比较前的包目录中。</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>interceptor</title>
     <link href="/2023/10/15/interceptor/"/>
     <url>/2023/10/15/interceptor/</url>
     
     <content type="html"><![CDATA[<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> LoginInterceptor implements HandlerInterceptor &#123;<br>    <span class="hljs-built_in">public</span> <span class="hljs-type">boolean</span> preHandle(HttpServletRequest request, HttpServletResponse response, <span class="hljs-keyword">Object</span> <span class="hljs-keyword">handler</span>)<br>            throws <span class="hljs-keyword">Exception</span> &#123;<br>        HttpSession <span class="hljs-keyword">session</span> = request.getSession();<br>        <span class="hljs-keyword">Object</span> <span class="hljs-keyword">admin</span> = <span class="hljs-keyword">session</span>.getAttribute(&quot;admin&quot;);<br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">admin</span> == <span class="hljs-keyword">null</span>) &#123;<br>            String <span class="hljs-keyword">header</span> = request.getHeader(&quot;X-Requested-With&quot;);<br>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">header</span> != <span class="hljs-keyword">null</span> &amp;&amp; <span class="hljs-keyword">header</span>.equals(&quot;XMLHttpRequest&quot;)) &#123;<br>                ObjectMapper mapper = <span class="hljs-built_in">new</span> ObjectMapper();<br>                RespBean respBean = RespBean.error(&quot;请重新登录&quot;);<br>                mapper.writeValue(response.getOutputStream(),respBean);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                response.sendRedirect(request.getContextPath() + &quot;/&quot;);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>之后在WebConfig配置拦截器</p><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">//配置拦截器</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">addInterceptors</span>(<span class="hljs-params">InterceptorRegistry registry</span>) &#123;<br>    registry.<span class="hljs-title function_">addInterceptor</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">LoginInterceptor</span>())<br>            .<span class="hljs-title function_">addPathPatterns</span>(<span class="hljs-string">&quot;/admin/**&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="1-1-过滤器Filter和拦截器Interceptor的区别"><a href="#1-1-过滤器Filter和拦截器Interceptor的区别" class="headerlink" title="1.1. *过滤器Filter和拦截器Interceptor的区别*"></a><strong>1.1.</strong> <em><strong>*过滤器Filter和拦截器Interceptor的区别*</strong></em></h2><p>过滤器 和 拦截器 均体现了AOP的编程思想，都可以实现诸如日志记录、登录鉴权等功能，但二者的不同点也是比较多的</p><p>1、 实现原理不同</p><p>过滤器 是基于函数回调的，拦截器 则是基于Java的反射机制（动态代理）实现的。</p><p>2、 使用范围不同</p><p>过滤器 实现的是 javax.servlet.Filter 接口，而这个接口是在Servlet规范中定义的，也就是说过滤器Filter 的使用要依赖于Tomcat等容器，导致它只能在web程序中使用。</p><p>拦截器(Interceptor) 它是一个Spring组件，并由Spring容器管理，并不依赖Tomcat等容器，是可以单独使用的。不仅能应用在web程序中，还可以使用在其他地方</p><p>3、 触发时机不同</p><p>过滤器 和 拦截器的触发时机也不同，我们看下边这张图。</p><p><img src="/images/interceptor.jpg" alt="img"> </p><p>执行顺序 ：过滤前 - 拦截前 - Controller处理 - 拦截后 - 过滤后</p>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>forth</title>
-    <link href="/2023/10/14/forth/"/>
-    <url>/2023/10/14/forth/</url>
-    
-    <content type="html"><![CDATA[<p>a啊啊啊啊啊啊</p><p><img src="/images/1.jpg" alt="可以写关于图片的描述"></p><p><img src="/images/2.png" alt="可以写关于图片的描述"></p>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>second</title>
-    <link href="/2023/09/25/3/"/>
-    <url>/2023/09/25/3/</url>
-    
-    <content type="html"><![CDATA[<p>a撒旦飞洒地方</p><p><img src="/images/1.jpg" alt="image-20230925145707114"></p><p><img src="/images/2.png"></p>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>second</title>
-    <link href="/2023/09/25/second/"/>
-    <url>/2023/09/25/second/</url>
-    
-    <content type="html"><![CDATA[<p>s风格非官方刚刚</p><p><img src="C:\Users\yuanchen\AppData\Roaming\Typora\typora-user-images\image-20230925145707114.png" alt="image-20230925145707114"></p><p><img src="/images/1.jpg" alt="image-20230925145707114"></p>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>first title</title>
-    <link href="/2023/09/23/first-title/"/>
-    <url>/2023/09/23/first-title/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="/2023/09/23/hello-world/"/>
-    <url>/2023/09/23/hello-world/</url>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
     
     
     
