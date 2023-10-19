@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>Iterator</title>
+    <link href="/2023/10/19/Iterator/"/>
+    <url>/2023/10/19/Iterator/</url>
+    
+    <content type="html"><![CDATA[<h3 id="1-迭代器-Iterator-是什么？"><a href="#1-迭代器-Iterator-是什么？" class="headerlink" title="1. 迭代器 Iterator 是什么？"></a>1. 迭代器 Iterator 是什么？</h3><p>Iterator 接口提供遍历任何 Collection 的接口。我们可以从一个 Collection 中使用迭代器方法来获取迭代器实例。迭代器取代了 Java 集合<a href="https://link.zhihu.com/?target=https://so.csdn.net/so/search?q=%E6%A1%86%E6%9E%B6&spm=1001.2101.3001.7020">框架</a>中的 Enumeration，迭代器允许调用者在迭代过程中移除元素。</p><h3 id="2-Iterator-怎么使用？有什么特点？"><a href="#2-Iterator-怎么使用？有什么特点？" class="headerlink" title="2. Iterator 怎么使用？有什么特点？"></a>2. Iterator 怎么使用？有什么特点？</h3><p>Iterator 使用代码如下：</p><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs vbnet">List&lt;<span class="hljs-type">String</span>&gt; list = <span class="hljs-built_in">new</span> ArrayList&lt;&gt;();<br><br><br><span class="hljs-keyword">Iterator</span>&lt;<span class="hljs-type">String</span>&gt; it = list. <span class="hljs-keyword">iterator</span>();<br><br><br><br><br><span class="hljs-type">String</span> obj = it. <span class="hljs-keyword">next</span>();<br><br><br>System. out. println(obj);<br></code></pre></td></tr></table></figure><p>Iterator 的特点是更加安全，因为它可以确保，在当前遍历的集合元素被更改的时候，就会抛出 ConcurrentModificationException 异常。</p><h3 id="3-Iterator-和-ListIterator-有什么区别？"><a href="#3-Iterator-和-ListIterator-有什么区别？" class="headerlink" title="3. Iterator 和 ListIterator 有什么区别？"></a>3. Iterator 和 ListIterator 有什么区别？</h3><ul><li>Iterator 可以遍历 Set 和 List 集合，而 ListIterator 只能遍历 List。</li><li>Iterator 只能单向遍历，而 ListIterator 可以双向遍历（向前&#x2F;后遍历）。</li><li>ListIterator 从 Iterator 接口继承，然后添加了一些额外的功能，比如添加一个元素、替换一个元素、获取前面或后面元素的索引位置。</li></ul>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>SpringBootApplication</title>
     <link href="/2023/10/16/SpringBootApplication/"/>
     <url>/2023/10/16/SpringBootApplication/</url>
